@@ -5,6 +5,8 @@
 package edu.ijse.mvc;
 
 import edu.ijse.mvc.db.DBConnection;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  *
@@ -15,8 +17,8 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
-        
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+        Connection connection = DBConnection.getInstance().getConnection();
     }
     
 }

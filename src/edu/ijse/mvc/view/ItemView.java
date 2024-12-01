@@ -4,7 +4,9 @@
  */
 package edu.ijse.mvc.view;
 
+import edu.ijse.mvc.controller.ItemController;
 import edu.ijse.mvc.dto.ItemDto;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -12,6 +14,7 @@ import edu.ijse.mvc.dto.ItemDto;
  */
 public class ItemView extends javax.swing.JFrame {
 
+    private ItemController itemController = new ItemController();
     /**
      * Creates new form ItemView
      */
@@ -232,12 +235,19 @@ public class ItemView extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void saveItem() {
-        ItemDto itemDto = new ItemDto(txtId.getText(),
+        try {
+            ItemDto itemDto = new ItemDto(txtId.getText(),
                 txtDesc.getText(),
                 txtPack.getText(), 
                 Double.parseDouble(txtPrice.getText()),
                 Integer.parseInt(txtQoh.getText()));
+            String resp = itemController.saveItem(itemDto);
+            JOptionPane.showMessageDialog(this, resp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
         
-        System.out.println(itemDto.toString());
+        
     }
 }

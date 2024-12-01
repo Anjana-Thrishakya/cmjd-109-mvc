@@ -8,6 +8,8 @@ import edu.ijse.mvc.db.DBConnection;
 import edu.ijse.mvc.dto.ItemDto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
 
 
 /**
@@ -28,4 +30,23 @@ public class ItemModel {
         return statement.executeUpdate() > 0 ? "Success" : "Fail";
         
     }
+    
+    public ArrayList<ItemDto> getAll() throws Exception{
+        String sql = "SELECT * FROM item";
+        Connection connection = DBConnection.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+        ResultSet rst = statement.executeQuery();
+        ArrayList<ItemDto> dtos = new ArrayList<>();
+        while (rst.next()) {            
+            ItemDto dto = new ItemDto(rst.getString("ItemCode"),
+                    rst.getString("Description"),
+                    rst.getString("PackSize"),
+                    rst.getDouble("UnitPrice"),
+                    rst.getInt("QtyOnHand"));
+            dtos.add(dto);
+        }
+        return dtos;
+        
+    }
+    
 }

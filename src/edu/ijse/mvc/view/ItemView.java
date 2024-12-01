@@ -6,7 +6,9 @@ package edu.ijse.mvc.view;
 
 import edu.ijse.mvc.controller.ItemController;
 import edu.ijse.mvc.dto.ItemDto;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -20,6 +22,7 @@ public class ItemView extends javax.swing.JFrame {
      */
     public ItemView() {
         initComponents();
+        loadTable();
     }
 
     /**
@@ -243,6 +246,39 @@ public class ItemView extends javax.swing.JFrame {
                 Integer.parseInt(txtQoh.getText()));
             String resp = itemController.saveItem(itemDto);
             JOptionPane.showMessageDialog(this, resp);
+            cleanForm();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+        
+        
+    }
+
+    private void cleanForm() {
+        txtDesc.setText("");
+        txtId.setText("");
+        txtPack.setText("");
+        txtPrice.setText("");
+        txtQoh.setText("");
+    }
+
+    private void loadTable() {
+        String columns[] = {"Item Code", "Description", "Pack Size", "Unit Price", "QoH"};
+        DefaultTableModel dtm = new DefaultTableModel(columns, 0) {
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        
+        tblItem.setModel(dtm);
+        
+        try {
+            ArrayList<ItemDto> itemDtos = itemController.getAll();
+            for (ItemDto itemDto : itemDtos) {
+                Object[] rowData = {itemDto.getItemCode(), itemDto.getDescription(), itemDto.getPackSize(), itemDto.getUnitPrice(), itemDto.getQoh()};
+                dtm.addRow(rowData);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, e.getMessage());

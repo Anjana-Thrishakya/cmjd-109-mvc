@@ -8,7 +8,10 @@ import edu.ijse.mvc.controller.CustomerController;
 import edu.ijse.mvc.controller.ItemController;
 import edu.ijse.mvc.dto.CustomerDto;
 import edu.ijse.mvc.dto.ItemDto;
+import edu.ijse.mvc.dto.OrderDetailDto;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -18,11 +21,14 @@ public class OrderForm extends javax.swing.JFrame {
     
     private CustomerController customerController = new CustomerController();
     private ItemController itemController = new ItemController();
+    
+    private ArrayList<OrderDetailDto> orderDetailDtos = new ArrayList<>();
     /**
      * Creates new form OrderForm
      */
     public OrderForm() {
         initComponents();
+        loadTable();
     }
 
     /**
@@ -112,6 +118,11 @@ public class OrderForm extends javax.swing.JFrame {
 
         btnCart.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnCart.setText("Add To Cart");
+        btnCart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCartActionPerformed(evt);
+            }
+        });
 
         tblCart.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -227,6 +238,10 @@ public class OrderForm extends javax.swing.JFrame {
         searchItem();
     }//GEN-LAST:event_btnItemSearchActionPerformed
 
+    private void btnCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCartActionPerformed
+        addToCart();
+    }//GEN-LAST:event_btnCartActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -314,4 +329,41 @@ public class OrderForm extends javax.swing.JFrame {
         }
         
     }
+
+    private void loadTable() {
+        String columns[] = {"Item Code", "Qty", "Discount"};
+        DefaultTableModel dtm = new DefaultTableModel(columns, 0){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        tblCart.setModel(dtm);
+        
+    }
+
+    private void addToCart() {
+        OrderDetailDto orderDetailDto = new OrderDetailDto(null,
+                txtItem.getText(),
+                Integer.parseInt(txtQty.getText()),
+                Double.parseDouble(txtDiscount.getText()));
+        orderDetailDtos.add(orderDetailDto);
+        
+        Object[] rowData = {orderDetailDto.getItemCode(), orderDetailDto.getQty(), orderDetailDto.getDiscount()};
+        
+        DefaultTableModel dtm = (DefaultTableModel) tblCart.getModel();
+        dtm.addRow(rowData);
+        
+        clearItem();
+    }
+
+    private void clearItem() {
+        txtItem.setText("");
+        txtQty.setText("");
+        txtDiscount.setText("");
+        lblItemData.setText("");
+        
+    }
+    
+    
 }

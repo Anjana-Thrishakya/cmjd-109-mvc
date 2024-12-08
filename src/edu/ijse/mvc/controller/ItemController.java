@@ -21,9 +21,18 @@ public class ItemController {
         return resp;
     }
     
+    public String updateItem(ItemDto itemDto) throws Exception{
+        String resp = itemModel.updateItem(itemDto);
+        return resp;
+    }
+    
     public ArrayList<ItemDto> getAll() throws Exception{
         ArrayList<ItemDto> itemDtos = itemModel.getAll();
         return itemDtos;
+    }
+    
+    public ItemDto searchItem(String itemCode) throws Exception{
+        return itemModel.searchItem(itemCode);
     }
     
 }

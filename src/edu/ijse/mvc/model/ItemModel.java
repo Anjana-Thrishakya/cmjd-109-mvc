@@ -49,4 +49,35 @@ public class ItemModel {
         
     }
     
+    public ItemDto searchItem(String itemCode) throws Exception{
+        String sql = "SELECT * FROM Item WHERE ItemCode = ?";
+        Connection connection = DBConnection.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, itemCode);
+        ResultSet rst = statement.executeQuery();
+        if(rst != null){
+            ItemDto dto = new ItemDto(rst.getString("ItemCode"),
+                    rst.getString("Description"),
+                    rst.getString("PackSize"),
+                    rst.getDouble("UnitPrice"),
+                    rst.getInt("QtyOnHand"));
+            return dto;
+        }
+        return null;
+    }
+    
+    public String updateItem(ItemDto dto) throws Exception{
+        String sql = "UPDATE ITEM SET Description = ?, PackSize = ?, UnitPrice = ?, QtyOnHand = ? WHERE ItemCode = ?";
+        Connection connection = DBConnection.getInstance().getConnection();
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, dto.getDescription());
+        statement.setString(2, dto.getPackSize());
+        statement.setDouble(3, dto.getUnitPrice());
+        statement.setInt(4, dto.getQoh());
+        statement.setString(5, dto.getItemCode());
+        
+        return statement.executeUpdate() > 0 ? "Success" : "Fail";
+        
+    }
+    
 }

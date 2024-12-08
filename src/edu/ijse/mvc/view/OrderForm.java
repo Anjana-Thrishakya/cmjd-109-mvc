@@ -6,10 +6,14 @@ package edu.ijse.mvc.view;
 
 import edu.ijse.mvc.controller.CustomerController;
 import edu.ijse.mvc.controller.ItemController;
+import edu.ijse.mvc.controller.OrderController;
 import edu.ijse.mvc.dto.CustomerDto;
 import edu.ijse.mvc.dto.ItemDto;
 import edu.ijse.mvc.dto.OrderDetailDto;
+import edu.ijse.mvc.dto.OrderDto;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -21,7 +25,7 @@ public class OrderForm extends javax.swing.JFrame {
     
     private CustomerController customerController = new CustomerController();
     private ItemController itemController = new ItemController();
-    
+    private OrderController orderController = new OrderController();
     private ArrayList<OrderDetailDto> orderDetailDtos = new ArrayList<>();
     /**
      * Creates new form OrderForm
@@ -139,6 +143,11 @@ public class OrderForm extends javax.swing.JFrame {
 
         btnPlaceOrder.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         btnPlaceOrder.setText("Place Order");
+        btnPlaceOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPlaceOrderActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -241,6 +250,10 @@ public class OrderForm extends javax.swing.JFrame {
     private void btnCartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCartActionPerformed
         addToCart();
     }//GEN-LAST:event_btnCartActionPerformed
+
+    private void btnPlaceOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlaceOrderActionPerformed
+        placeOrder();
+    }//GEN-LAST:event_btnPlaceOrderActionPerformed
 
     /**
      * @param args the command line arguments
@@ -363,6 +376,27 @@ public class OrderForm extends javax.swing.JFrame {
         txtDiscount.setText("");
         lblItemData.setText("");
         
+    }
+
+    private void placeOrder() {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String stringDate = sdf.format(date);
+        
+        OrderDto orderDto = new OrderDto(txtOrderId.getText() ,
+                txtCustomer.getText(), 
+                stringDate);
+        for (OrderDetailDto orderDetailDto : orderDetailDtos) {
+            orderDetailDto.setOrderId(orderDto.getId());
+        }
+        
+        try {
+            String resp = orderController.placeOrder(orderDto, orderDetailDtos);
+            JOptionPane.showMessageDialog(this, resp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
     }
     
     

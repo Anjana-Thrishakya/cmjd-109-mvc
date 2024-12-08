@@ -5,7 +5,9 @@
 package edu.ijse.mvc.view;
 
 import edu.ijse.mvc.controller.CustomerController;
+import edu.ijse.mvc.controller.ItemController;
 import edu.ijse.mvc.dto.CustomerDto;
+import edu.ijse.mvc.dto.ItemDto;
 import javax.swing.JOptionPane;
 
 /**
@@ -15,7 +17,7 @@ import javax.swing.JOptionPane;
 public class OrderForm extends javax.swing.JFrame {
     
     private CustomerController customerController = new CustomerController();
-
+    private ItemController itemController = new ItemController();
     /**
      * Creates new form OrderForm
      */
@@ -88,6 +90,11 @@ public class OrderForm extends javax.swing.JFrame {
 
         btnItemSearch.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnItemSearch.setText("Search");
+        btnItemSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnItemSearchActionPerformed(evt);
+            }
+        });
 
         lblItemData.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
@@ -216,6 +223,10 @@ public class OrderForm extends javax.swing.JFrame {
         searchCustomer();
     }//GEN-LAST:event_btnSearchActionPerformed
 
+    private void btnItemSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnItemSearchActionPerformed
+        searchItem();
+    }//GEN-LAST:event_btnItemSearchActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -285,5 +296,22 @@ public class OrderForm extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
+    }
+
+    private void searchItem() {
+        String itemCode = txtItem.getText();
+        try {
+            ItemDto itemDto = itemController.searchItem(itemCode);
+            if(itemDto != null){
+                lblItemData.setText(itemDto.getItemCode() + " | " + itemDto.getDescription() + " | " + itemDto.getPackSize() + " | " + itemDto.getQoh() + " | " + itemDto.getUnitPrice());
+                
+            } else {
+                lblItemData.setText("Item Not Found");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+        
     }
 }

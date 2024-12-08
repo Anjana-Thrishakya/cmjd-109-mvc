@@ -55,7 +55,7 @@ public class ItemModel {
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setString(1, itemCode);
         ResultSet rst = statement.executeQuery();
-        if(rst != null){
+        if(rst.next()){
             ItemDto dto = new ItemDto(rst.getString("ItemCode"),
                     rst.getString("Description"),
                     rst.getString("PackSize"),
